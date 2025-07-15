@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\FireEvent;
+use App\Events\LogoutEvent;
+use App\Listeners\FireListener;
+use App\Listeners\LogoutListener;
+use App\Listeners\updateEmailListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -14,12 +19,21 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<class-string, array<int, class-string>>
      */
-    protected $listen = [
+    protected $listen = [ 
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        // FireEvent::class=>[
+        //     FireListener::class
+        // ],
+        // LogoutEvent::class => [
+        //     LogoutListener::class,
+        // ]
     ];
-
+    protected $subscribe = [
+        LogoutListener::class,
+        updateEmailListener::class,
+    ];
     /**
      * Register any events for your application.
      */

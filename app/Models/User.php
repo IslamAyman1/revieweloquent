@@ -24,7 +24,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'remember_token'
+        'remember_token',
+        'role_id',
+        'email_verified_at',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -44,18 +49,33 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'permissions' => 'array'
     ];
-  
-    public function phone(){    
+    public function hasPermission($permissions){
+         foreach($permissions as $permission){
+            if(!in_array($permission,$this->permissions)){
+                return false;
+            }
+         }
+         return true;
+    }  
+      public function phone(){    
        return $this->hasOne(phone::class);
     }
-    public function roles(){
-        return $this->belongsToMany(Role::class,'role_user');
+    public function Role(){
+        return $this->belongsTo(Role::class,'role_id');
+    } 
+    public function hasRole($role){
+      return $this->Role->role_name === $role;
     }
-    protected function Name():Attribute{
-        return Attribute::make(
-            get:fn($value)=>strtoupper($value),
-            set:fn($value)=>strtoupper($value)
-        );
-    }
+
+    // public function roles(){
+    //     return $this->belongsToMany(Role::class,'role_user');
+    // }
+    // protected function Name():Attribute{
+    //     return Attribute::make(
+    //         get:fn($value)=>strtoupper($value),
+    //         set:fn($value)=>strtoupper($value)
+    //     );
+    // }
 }

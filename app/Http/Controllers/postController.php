@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\comment;
+use App\Models\post;
 
 class postController extends Controller
 {
@@ -14,4 +15,11 @@ class postController extends Controller
         // }
         return $comments->title;
     }
+    public function edit(post $post){
+        $this->authorize('update',$post);
+        // auth()->user()->cannot('update',$post);
+    //    $boolean = $this->authorize('create', post::class);
+        return "boolean";
+    }
 }
+ 

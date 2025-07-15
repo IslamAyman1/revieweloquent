@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\FireEvent;
+use App\Events\updateEmailEvent;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -42,8 +44,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
-
+        // event(new Registered($user));
+        // FireEvent::dispatch($user);
+        event(new updateEmailEvent($user));
+        // event(new FireEvent($user));
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
